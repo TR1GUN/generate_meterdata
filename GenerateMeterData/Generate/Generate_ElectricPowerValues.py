@@ -31,7 +31,6 @@ class GeneratorElectricPowerValues(GeneratorWithMeterData):
         # Чтоб в будущем не выстрелить себе в ногу - Сначала ставим константы
         self.count = 1
         self.DeviceIdx = 0
-        # self.RecordTypeId = ''
         self.MeterData_tag = {}
         self.cTime = cTime
         self.Config = {}

@@ -16,7 +16,12 @@ class GeneratorJournalValues(GeneratorWithMeterData):
     MeterData_tag = {}
     Count_timestamp = 1
 
-    def __init__(self, DeviceIdx: int, RecordTypeId: str, Redefine_tag: dict = {}, Count_timestamp: int = 1,):
+    def __init__(self,
+                 RecordTypeId: str,
+                 Redefine_tag: dict = {},
+                 Count_timestamp: int = 1,
+                 MeterTable=None,
+                 ElConfig=None):
 
         # Чтоб в будущем не выстрелить себе в ногу - Сначала ставим константы
         self.count = 1
@@ -24,8 +29,19 @@ class GeneratorJournalValues(GeneratorWithMeterData):
         self.RecordTypeId = ''
         self.MeterData_tag = {}
 
-        # Теперь Переопределяем тэги
-        self.DeviceIdx = DeviceIdx
+        # Получаем запись MeterTable
+        if MeterTable is None:
+            self.MeterTable = self._generation_MeterTable()
+        else:
+            self.MeterTable = MeterTable
+
+        if ElConfig is None:
+            self.Config = self._generation_ElConfig()
+        else:
+            self.Config = ElConfig
+
+        self.DeviceIdx = self.Config.get('DeviceIdx')
+
         self.RecordTypeId = RecordTypeId
         self.Count_timestamp = Count_timestamp
         # С Переопределяемымыми тэгами - сложнее - отделяем мух от котлет и meter data тэги от остальных
@@ -75,10 +91,10 @@ class GeneratorJournalValues(GeneratorWithMeterData):
         import random
         # Здесь - По self.RecordTypeId Определяем Event Id , а после - сам Event - ЦЕ ВАЖНА
         # генерируем сначала в формате JSON
-        from GenerateMeterData.Generate.Service_Generate_Constant import Journal_dict , JournalValues_list
+        from GenerateMeterData.Generate.Service_Generate_Constant import measure_Journal_list
         # сначала проверяем входит ли наш журнал в учтеные журналы
 
-        assert self.RecordTypeId in Journal_dict, '\nНЕПРАВИЛЬНОЕ ИМЯ ЖУРНАЛА ' + '\nЗАДАН ' + str(self.RecordTypeId)
+        assert self.RecordTypeId in measure_Journal_list, '\nНЕПРАВИЛЬНОЕ ИМЯ ЖУРНАЛА ' + '\nЗАДАН ' + str(self.RecordTypeId)
 
         JournalValues_format_JSON = \
             {

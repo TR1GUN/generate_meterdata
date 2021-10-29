@@ -61,8 +61,8 @@ def ElConfig(MeterTable=None, Config_tag: dict = {}):
     VoltageCoeff - float - Коэффициент  трансформации Напряжения
     MeterConst - float - Коэффициент  трансформации
 
-    :param MeterTable:
-    :param Config_tag:
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param Config_tag: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -95,8 +95,8 @@ def DigConfig(MeterTable=None, Config_tag: dict = {}):
     ChannelsIn - int - Канал входа
     ChannelsOut - int - Канал входа
 
-    :param MeterTable:
-    :param Config_tag:
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param Config_tag: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -128,8 +128,8 @@ def PlsConfig(MeterTable=None, Config_tag: dict = {}):
     DST - int_bool - Переход на летнее - зимнее время, True - 1 , False - 0
     Channels - int - Количество каналов
 
-    :param MeterTable:
-    :param Config_tag:
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param Config_tag: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -183,10 +183,10 @@ def ElMomentEnergy(
     R-3	- float -	Обратная реактивная энергия по тарифу 3, Вт*ч
     R-4	- float -	Обратная реактивная энергия по тарифу 4, Вт*ч
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -244,10 +244,10 @@ def ElDayEnergy(
     R-3	- float -	Обратная реактивная энергия по тарифу 3, Вт*ч
     R-4	- float -	Обратная реактивная энергия по тарифу 4, Вт*ч
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -306,10 +306,10 @@ def ElMonthEnergy(
     R-3	- float -	Обратная реактивная энергия по тарифу 3, Вт*ч
     R-4	- float -	Обратная реактивная энергия по тарифу 4, Вт*ч
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -367,10 +367,10 @@ def ElDayConsEnergy(
     R-3	- float -	Обратная реактивная энергия по тарифу 3, Вт*ч
     R-4	- float -	Обратная реактивная энергия по тарифу 4, Вт*ч
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -428,10 +428,10 @@ def ElMonthConsEnergy(
     R-3	- float -	Обратная реактивная энергия по тарифу 3, Вт*ч
     R-4	- float -	Обратная реактивная энергия по тарифу 4, Вт*ч
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
@@ -453,19 +453,26 @@ def ElMonthConsEnergy(
               }
     return result
 
+
 # //-------------------------------------------------------------------------------------------------------------
 # //                            текущие ПКЭ электросчетчика
 # //-------------------------------------------------------------------------------------------------------------
 
 
 def ElMomentQuality(
-                    Redefine_tag: dict = {},
-                    Count_timestamp: int = 1,
-                    MeterTable=None,
-                    ElConfig=None
-                    ):
+        Redefine_tag: dict = {},
+        Count_timestamp: int = 1,
+        MeterTable=None,
+        ElConfig=None
+):
     """
     ElMomentQuality	текущие ПКЭ электросчетчика
+
+
+    DeviceIdx - int - Внутренний ID
+    Timestamp - int - Таймштамп в Unixtime
+    RecordTypeId - int - ID типа данных
+    Valid - int_bool - Наличие соответствия записи, True - 1 , False - 0
 
     UA - float - Напряжение фазы A, В
     UB - float - Напряжение фазы B, В
@@ -494,21 +501,21 @@ def ElMomentQuality(
     kPC - float - Коэффициент мощности фазы C
     Freq - float - Частота сети, Гц
 
-    :param Redefine_tag:
-    :param Count_timestamp:
-    :param MeterTable:
-    :param ElConfig:
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
     :return:
     """
 
     from GenerateMeterData.Generate.Generate_ElectricQualityValues import GeneratorElectricQualityValues
 
     ElectricQualityValues = GeneratorElectricQualityValues(
-                                                            Redefine_tag=Redefine_tag,
-                                                            Count_timestamp=Count_timestamp,
-                                                            MeterTable=MeterTable,
-                                                            ElConfig=ElConfig
-                                                            )
+        Redefine_tag=Redefine_tag,
+        Count_timestamp=Count_timestamp,
+        MeterTable=MeterTable,
+        ElConfig=ElConfig
+    )
 
     # Теперь что даелаем - Вытаскиваем значения конфига
 
@@ -517,3 +524,155 @@ def ElMomentQuality(
               ElectricQualityValues.RecordTypeId: ElectricQualityValues.ElectricQualityValues
               }
     return result
+
+
+# //-------------------------------------------------------------------------------------------------------------
+# //                            профили мощности первого архива электросчетчика
+# //-------------------------------------------------------------------------------------------------------------
+
+def ElArr1ConsPower(
+        Redefine_tag: dict = {},
+        Count_timestamp: int = 1,
+        MeterTable=None,
+        ElConfig=None
+):
+    """
+    ElArr1ConsPower	профили мощности первого архива электросчетчика
+
+
+    DeviceIdx - int - Внутренний ID
+    Timestamp - int - Таймштамп в Unixtime
+    RecordTypeId - int - ID типа данных
+    Valid - int_bool - Наличие соответствия записи, True - 1 , False - 0
+
+    P+	- float -	Прямая активная мощность среза профиля мощности, Вт
+    P-	- float -	Прямая реактивная мощность среза профиля мощности, Вт
+    Q+	- float -	Обратная активная мощность среза профиля мощности, Вт
+    Q-	- float -	Обратная реактивная мощность среза профиля мощности, Вт
+    isSummer - int_bool - Флаг летнего времени среза профиля мощности
+    isOvfl	- int_bool - Флаг переполнения среза профиля мощности
+    isPart - int_bool - Флаг неполного среза профиля мощности
+
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
+    :return:
+    """
+
+    from GenerateMeterData.Generate.Generate_ElectricPowerValues import GeneratorElectricPowerValues
+
+    ElectricPowerValues = GeneratorElectricPowerValues(
+        Redefine_tag=Redefine_tag,
+        Count_timestamp=Count_timestamp,
+        MeterTable=MeterTable,
+        ElConfig=ElConfig
+    )
+
+    # Теперь что даелаем - Вытаскиваем значения конфига
+
+    result = {"ElConfig": ElectricPowerValues.Config,
+              "MeterTable": ElectricPowerValues.MeterTable,
+              ElectricPowerValues.RecordTypeId: ElectricPowerValues.ElectricPowerValues
+              }
+    return result
+
+
+# //-------------------------------------------------------------------------------------------------------------
+# //                                        Журналы
+# //-------------------------------------------------------------------------------------------------------------
+
+def Journal(
+        RecordTypeId: str,
+        Redefine_tag: dict = {},
+        Count_timestamp: int = 1,
+        MeterTable=None,
+        ElConfig=None
+):
+    """
+    Journal	Журналы
+
+
+    DeviceIdx - int - Внутренний ID
+    Timestamp - int - Таймштамп в Unixtime
+    RecordTypeId - int - ID типа данных
+    Valid - int_bool - Наличие соответствия записи, True - 1 , False - 0
+
+    eventId	- int_bool - Номер события
+    event - int_bool -	Код события
+
+
+    :param Redefine_tag: - Словарь Переопределение тэгов - Значения
+    :param Count_timestamp: - Количество Генерируемых записей
+    :param MeterTable: - Словарь записи счетчика в таблице - Если нет -то он генерируется и записывается
+    :param ElConfig: - Словарь Конфига - Если нет -то он генерируется и записывается
+    :return:
+    """
+
+    from GenerateMeterData.Generate.Generate_JournalValues import GeneratorJournalValues
+
+    JournalValues = GeneratorJournalValues(
+        RecordTypeId=RecordTypeId,
+        Redefine_tag=Redefine_tag,
+        Count_timestamp=Count_timestamp,
+        MeterTable=MeterTable,
+        ElConfig=ElConfig
+    )
+
+    # Теперь что даелаем - Вытаскиваем значения конфига
+
+    result = {"ElConfig": JournalValues.Config,
+              "MeterTable": JournalValues.MeterTable,
+              JournalValues.RecordTypeId: JournalValues.JournalValues
+              }
+    return result
+
+
+# //-------------------------------------------------------------------------------------------------------------
+# //                                        Журналы
+# //-------------------------------------------------------------------------------------------------------------
+
+class JournalName:
+    ElJrnlPwr = 'ElJrnlPwr'
+    ElJrnlTimeCorr = 'ElJrnlTimeCorr'
+    ElJrnlReset = 'ElJrnlReset'
+    ElJrnlC1Init = 'ElJrnlC1Init'
+    ElJrnlC2Init = 'ElJrnlC2Init'
+    ElJrnlTrfCorr = 'ElJrnlTrfCorr'
+    ElJrnlOpen = 'ElJrnlOpen'
+    ElJrnlUnAyth = 'ElJrnlUnAyth'
+    ElJrnlPwrA = 'ElJrnlPwrA'
+    ElJrnlPwrB = 'ElJrnlPwrB'
+    ElJrnlPwrC = 'ElJrnlPwrC'
+    ElJrnlProg = 'ElJrnlProg'
+    ElJrnlRelay = 'ElJrnlRelay'
+    ElJrnlLimESumm = 'ElJrnlLimESumm'
+    ElJrnlLimETrf = 'ElJrnlLimETrf'
+    ElJrnlLimETrf1 = 'ElJrnlLimETrf1'
+    ElJrnlLimETrf2 = 'ElJrnlLimETrf2'
+    ElJrnlLimETrf3 = 'ElJrnlLimETrf3'
+    ElJrnlLimETrf4 = 'ElJrnlLimETrf4'
+    ElJrnlLimUAMax = 'ElJrnlLimUAMax'
+    ElJrnlLimUAMin = 'ElJrnlLimUAMin'
+    ElJrnlLimUBMax = 'ElJrnlLimUBMax'
+    ElJrnlLimUBMin = 'ElJrnlLimUBMin'
+    ElJrnlLimUCMax = 'ElJrnlLimUCMax'
+    ElJrnlLimUCMin = 'ElJrnlLimUCMin'
+    ElJrnlLimUABMax = 'ElJrnlLimUABMax'
+    ElJrnlLimUABMin = 'ElJrnlLimUABMin'
+    ElJrnlLimUBCMax = 'ElJrnlLimUBCMax'
+    ElJrnlLimUBCMin = 'ElJrnlLimUBCMin'
+    ElJrnlLimUCAMax = 'ElJrnlLimUCAMax'
+    ElJrnlLimUCAMin = 'ElJrnlLimUCAMin'
+    ElJrnlLimIAMax = 'ElJrnlLimIAMax'
+    ElJrnlLimIBMax = 'ElJrnlLimIBMax'
+    ElJrnlLimICMax = 'ElJrnlLimICMax'
+    ElJrnlLimFreqMax = 'ElJrnlLimFreqMax'
+    ElJrnlLimFreqMin = 'ElJrnlLimFreqMin'
+    ElJrnlLimPwr = 'ElJrnlLimPwr'
+    ElJrnlLimPwrPP = 'ElJrnlLimPwrPP'
+    ElJrnlLimPwrPM = 'ElJrnlLimPwrPM'
+    ElJrnlLimPwrQP = 'ElJrnlLimPwrQP'
+    ElJrnlLimPwrQM = 'ElJrnlLimPwrQM'
+    ElJrnlReverce = 'ElJrnlReverce'
+    PlsJrnlTimeCorr = 'PlsJrnlTimeCorr'
