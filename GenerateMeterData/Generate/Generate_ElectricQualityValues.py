@@ -69,9 +69,10 @@ class GeneratorElectricQualityValues(GeneratorWithMeterData):
 
         for ids in MeterData:
             # генерируем сначала в формате JSON
-            ElectricQualityValues_format_JSON = self._generate_ElectricQualityValues_one_record()
-            # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
-            MeterData[ids].update(ElectricQualityValues_format_JSON)
+            if MeterData[ids].get('Valid') > 0:
+                ElectricQualityValues_format_JSON = self._generate_ElectricQualityValues_one_record()
+                # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
+                MeterData[ids].update(ElectricQualityValues_format_JSON)
 
         return MeterData
 
@@ -136,114 +137,114 @@ class GeneratorElectricQualityValues(GeneratorWithMeterData):
 
         for ids in ElectricQualityValues_format_JSON:
             # Формируем 5 списков как раз по тарифам
+            if ElectricQualityValues_format_JSON[ids].get('Valid') > 0:
+                ElectricQualityValues_PhaseA = {
+                    'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
+                    'Phase': 'A',
+                    'U': ElectricQualityValues_format_JSON[ids].get('UA'),
+                    'I': ElectricQualityValues_format_JSON[ids].get('IA'),
+                    'P': ElectricQualityValues_format_JSON[ids].get('PA'),
+                    'Q': ElectricQualityValues_format_JSON[ids].get('QA'),
+                    'S': ElectricQualityValues_format_JSON[ids].get('SA'),
+                    'KP': ElectricQualityValues_format_JSON[ids].get('kPA'),
+                    'Angle': ElectricQualityValues_format_JSON[ids].get('AngAB'),
+                    'F': None,
+                }
+                ElectricQualityValues_PhaseB = {
+                    'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
+                    'Phase': 'B',
+                    'U': ElectricQualityValues_format_JSON[ids].get('UB'),
+                    'I': ElectricQualityValues_format_JSON[ids].get('IB'),
+                    'P': ElectricQualityValues_format_JSON[ids].get('PB'),
+                    'Q': ElectricQualityValues_format_JSON[ids].get('QB'),
+                    'S': ElectricQualityValues_format_JSON[ids].get('SB'),
+                    'KP': ElectricQualityValues_format_JSON[ids].get('kPB'),
+                    'Angle': ElectricQualityValues_format_JSON[ids].get('AngBC'),
+                    'F': None,
+                }
 
-            ElectricQualityValues_PhaseA = {
-                'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
-                'Phase': 'A',
-                'U': ElectricQualityValues_format_JSON[ids].get('UA'),
-                'I': ElectricQualityValues_format_JSON[ids].get('IA'),
-                'P': ElectricQualityValues_format_JSON[ids].get('PA'),
-                'Q': ElectricQualityValues_format_JSON[ids].get('QA'),
-                'S': ElectricQualityValues_format_JSON[ids].get('SA'),
-                'KP': ElectricQualityValues_format_JSON[ids].get('kPA'),
-                'Angle': ElectricQualityValues_format_JSON[ids].get('AngAB'),
-                'F': None,
-            }
-            ElectricQualityValues_PhaseB = {
-                'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
-                'Phase': 'B',
-                'U': ElectricQualityValues_format_JSON[ids].get('UB'),
-                'I': ElectricQualityValues_format_JSON[ids].get('IB'),
-                'P': ElectricQualityValues_format_JSON[ids].get('PB'),
-                'Q': ElectricQualityValues_format_JSON[ids].get('QB'),
-                'S': ElectricQualityValues_format_JSON[ids].get('SB'),
-                'KP': ElectricQualityValues_format_JSON[ids].get('kPB'),
-                'Angle': ElectricQualityValues_format_JSON[ids].get('AngBC'),
-                'F': None,
-            }
+                ElectricQualityValues_PhaseC = {
+                    'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
+                    'Phase': 'C',
+                    'U': ElectricQualityValues_format_JSON[ids].get('UC'),
+                    'I': ElectricQualityValues_format_JSON[ids].get('IC'),
+                    'P': ElectricQualityValues_format_JSON[ids].get('PC'),
+                    'Q': ElectricQualityValues_format_JSON[ids].get('QC'),
+                    'S': ElectricQualityValues_format_JSON[ids].get('SC'),
+                    'KP': ElectricQualityValues_format_JSON[ids].get('kPC'),
+                    'Angle': ElectricQualityValues_format_JSON[ids].get('AngAC'),
+                    'F': None,
+                }
 
-            ElectricQualityValues_PhaseC = {
-                'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
-                'Phase': 'C',
-                'U': ElectricQualityValues_format_JSON[ids].get('UC'),
-                'I': ElectricQualityValues_format_JSON[ids].get('IC'),
-                'P': ElectricQualityValues_format_JSON[ids].get('PC'),
-                'Q': ElectricQualityValues_format_JSON[ids].get('QC'),
-                'S': ElectricQualityValues_format_JSON[ids].get('SC'),
-                'KP': ElectricQualityValues_format_JSON[ids].get('kPC'),
-                'Angle': ElectricQualityValues_format_JSON[ids].get('AngAC'),
-                'F': None,
-            }
-
-            ElectricQualityValues_PhaseSUM = {
-                'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
-                'Phase': 'Summ',
-                'U': None,
-                'I': None,
-                'P': ElectricQualityValues_format_JSON[ids].get('PS'),
-                'Q': ElectricQualityValues_format_JSON[ids].get('QS'),
-                'S': ElectricQualityValues_format_JSON[ids].get('SS'),
-                'KP': ElectricQualityValues_format_JSON[ids].get('kPS'),
-                'Angle': None,
-                'F': ElectricQualityValues_format_JSON[ids].get('Freq'),
-            }
+                ElectricQualityValues_PhaseSUM = {
+                    'Id': ElectricQualityValues_format_JSON[ids].get('Id'),
+                    'Phase': 'Summ',
+                    'U': None,
+                    'I': None,
+                    'P': ElectricQualityValues_format_JSON[ids].get('PS'),
+                    'Q': ElectricQualityValues_format_JSON[ids].get('QS'),
+                    'S': ElectricQualityValues_format_JSON[ids].get('SS'),
+                    'KP': ElectricQualityValues_format_JSON[ids].get('kPS'),
+                    'Angle': None,
+                    'F': ElectricQualityValues_format_JSON[ids].get('Freq'),
+                }
 
 
-            # А теперь берем добавляем это все в наш список
-            ElectricQualityValues_list.append(ElectricQualityValues_PhaseA)
-            ElectricQualityValues_list.append(ElectricQualityValues_PhaseB)
-            ElectricQualityValues_list.append(ElectricQualityValues_PhaseC)
-            ElectricQualityValues_list.append(ElectricQualityValues_PhaseSUM)
+                # А теперь берем добавляем это все в наш список
+                ElectricQualityValues_list.append(ElectricQualityValues_PhaseA)
+                ElectricQualityValues_list.append(ElectricQualityValues_PhaseB)
+                ElectricQualityValues_list.append(ElectricQualityValues_PhaseC)
+                ElectricQualityValues_list.append(ElectricQualityValues_PhaseSUM)
 
         # начинаем формировать команду
+        if len(ElectricQualityValues_list) > 0:
+            columns_list = [
+                'Id',
+                'Phase',
+                'U',
+                'I',
+                'P',
+                'Q',
+                'S',
+                'KP',
+                'Angle',
+                'F',
+                ]
 
-        columns_list = [
-            'Id',
-            'Phase',
-            'U',
-            'I',
-            'P',
-            'Q',
-            'S',
-            'KP',
-            'Angle',
-            'F',
-            ]
+            columns = ''
+            values = ''
 
-        columns = ''
-        values = ''
+            # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
 
-        # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
+            for i in range(len(columns_list)):
+                columns = columns + columns_list[i] + ' , '
 
-        for i in range(len(columns_list)):
-            columns = columns + columns_list[i] + ' , '
+            # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
+            for i in range(len(ElectricQualityValues_list)):
+                values_element = ''
+                for x in range(len(columns_list)):
+                    # если это стринг - то экранируем его
+                    if type(ElectricQualityValues_list[i].get(columns_list[x])) == str:
+                        ElectricQualityValues_list[i][columns_list[x]] = '\"' + ElectricQualityValues_list[i].get(
+                            columns_list[x]) + '\"'
+                    # Если это нон - То делаем из него стринг NULL
+                    elif ElectricQualityValues_list[i].get(columns_list[x]) == None:
+                        ElectricQualityValues_list[i][columns_list[x]] = 'null'
 
-        # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
-        for i in range(len(ElectricQualityValues_list)):
-            values_element = ''
-            for x in range(len(columns_list)):
-                # если это стринг - то экранируем его
-                if type(ElectricQualityValues_list[i].get(columns_list[x])) == str:
-                    ElectricQualityValues_list[i][columns_list[x]] = '\"' + ElectricQualityValues_list[i].get(
-                        columns_list[x]) + '\"'
-                # Если это нон - То делаем из него стринг NULL
-                elif ElectricQualityValues_list[i].get(columns_list[x]) == None:
-                    ElectricQualityValues_list[i][columns_list[x]] = 'null'
+                    values_element = values_element + str(ElectricQualityValues_list[i].get(columns_list[x])) + ' , '
+                # Обрезаем последнюю запятую
+                values_element = values_element[:-2]
+                values = values + ' ( ' + values_element + ' ) , '
 
-                values_element = values_element + str(ElectricQualityValues_list[i].get(columns_list[x])) + ' , '
             # Обрезаем последнюю запятую
-            values_element = values_element[:-2]
-            values = values + ' ( ' + values_element + ' ) , '
+            columns = columns[:-2]
+            values = values[:-2]
 
-        # Обрезаем последнюю запятую
-        columns = columns[:-2]
-        values = values[:-2]
+            command = 'INSERT INTO ElectricQualityValues ( ' + columns + ') VALUES  ' + values + ' ;'
 
-        command = 'INSERT INTO ElectricQualityValues ( ' + columns + ') VALUES  ' + values + ' ;'
+            # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
+            from GenerateMeterData.Service.Work_With_Database import SQL
 
-        # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
-        from GenerateMeterData.Service.Work_With_Database import SQL
-
-        result = SQL(command=command)
+            result = SQL(command=command)
 
 

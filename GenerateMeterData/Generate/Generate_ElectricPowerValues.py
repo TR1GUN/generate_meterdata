@@ -77,11 +77,12 @@ class GeneratorElectricPowerValues(GeneratorWithMeterData):
 
         for ids in MeterData:
             # генерируем сначала в формате JSON
-            ElectricPowerValues_format_JSON = self._generate_ElectricPowerValues_one_record()
-            # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
-            # Теперь ставим айдишник записи
-            # ElectricPowerValues_format_JSON['id'] = deepcopy(self.MeterData[ids]['id'])
-            MeterData[ids].update(ElectricPowerValues_format_JSON)
+            if MeterData[ids].get('Valid') > 0:
+                ElectricPowerValues_format_JSON = self._generate_ElectricPowerValues_one_record()
+                # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
+                # Теперь ставим айдишник записи
+                # ElectricPowerValues_format_JSON['id'] = deepcopy(self.MeterData[ids]['id'])
+                MeterData[ids].update(ElectricPowerValues_format_JSON)
 
         return MeterData
 
@@ -141,65 +142,66 @@ class GeneratorElectricPowerValues(GeneratorWithMeterData):
 
         for ids in ElectricPowerValues_format_JSON:
             # Формируем 5 списков как раз по тарифам
+            # ВСЕ ЗАПИСЫВАЕМ ТОЛЬКО ЕСЛИ VALID > 0 :
+            if ElectricPowerValues_format_JSON[ids].get('Valid') > 0:
+                ElectricPowerValues = {
+                    'Id': ElectricPowerValues_format_JSON[ids].get('Id'),
+                    'Period': ElectricPowerValues_format_JSON[ids].get('cTime'),
+                    'Pp': ElectricPowerValues_format_JSON[ids].get('P+'),
+                    'Pm': ElectricPowerValues_format_JSON[ids].get('P-'),
+                    'Qp': ElectricPowerValues_format_JSON[ids].get('Q+'),
+                    'Qm': ElectricPowerValues_format_JSON[ids].get('Q-'),
+                    'Partial': ElectricPowerValues_format_JSON[ids].get('isPart'),
+                    'Overflow': ElectricPowerValues_format_JSON[ids].get('isOvfl'),
+                    'Season': ElectricPowerValues_format_JSON[ids].get('isSummer')
+                }
 
-            ElectricPowerValues = {
-                'Id': ElectricPowerValues_format_JSON[ids].get('Id'),
-                'Period': ElectricPowerValues_format_JSON[ids].get('cTime'),
-                'Pp': ElectricPowerValues_format_JSON[ids].get('P+'),
-                'Pm': ElectricPowerValues_format_JSON[ids].get('P-'),
-                'Qp': ElectricPowerValues_format_JSON[ids].get('Q+'),
-                'Qm': ElectricPowerValues_format_JSON[ids].get('Q-'),
-                'Partial': ElectricPowerValues_format_JSON[ids].get('isPart'),
-                'Overflow': ElectricPowerValues_format_JSON[ids].get('isOvfl'),
-                'Season': ElectricPowerValues_format_JSON[ids].get('isSummer')
-            }
+                # А теперь берем добавляем это все в наш список
+                ElectricPowerValues_list.append(ElectricPowerValues)
+        if len(ElectricPowerValues_list) > 0:
+            # начинаем формировать команду
 
-            # А теперь берем добавляем это все в наш список
-            ElectricPowerValues_list.append(ElectricPowerValues)
+            columns_list = [
+                'Id',
+                'Period',
+                'Pp',
+                'Pm',
+                'Qp',
+                'Qm',
+                'Partial',
+                'Overflow',
+                'Season'
+            ]
 
-        # начинаем формировать команду
+            columns = ''
+            values = ''
 
-        columns_list = [
-            'Id',
-            'Period',
-            'Pp',
-            'Pm',
-            'Qp',
-            'Qm',
-            'Partial',
-            'Overflow',
-            'Season'
-        ]
+            # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
 
-        columns = ''
-        values = ''
+            for i in range(len(columns_list)):
+                columns = columns + columns_list[i] + ' , '
 
-        # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
+            # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
+            for i in range(len(ElectricPowerValues_list)):
+                values_element = ''
+                for x in range(len(columns_list)):
+                    # если это стринг - то экранируем его
+                    if type(ElectricPowerValues_list[i].get(columns_list[x])) == str:
+                        ElectricPowerValues_list[i][columns_list[x]] = '\"' + ElectricPowerValues_list[i].get(
+                            columns_list[x]) + '\"'
 
-        for i in range(len(columns_list)):
-            columns = columns + columns_list[i] + ' , '
+                    values_element = values_element + str(ElectricPowerValues_list[i].get(columns_list[x])) + ' , '
+                # Обрезаем последнюю запятую
+                values_element = values_element[:-2]
+                values = values + ' ( ' + values_element + ' ) , '
 
-        # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
-        for i in range(len(ElectricPowerValues_list)):
-            values_element = ''
-            for x in range(len(columns_list)):
-                # если это стринг - то экранируем его
-                if type(ElectricPowerValues_list[i].get(columns_list[x])) == str:
-                    ElectricPowerValues_list[i][columns_list[x]] = '\"' + ElectricPowerValues_list[i].get(
-                        columns_list[x]) + '\"'
-
-                values_element = values_element + str(ElectricPowerValues_list[i].get(columns_list[x])) + ' , '
             # Обрезаем последнюю запятую
-            values_element = values_element[:-2]
-            values = values + ' ( ' + values_element + ' ) , '
+            columns = columns[:-2]
+            values = values[:-2]
 
-        # Обрезаем последнюю запятую
-        columns = columns[:-2]
-        values = values[:-2]
+            command = 'INSERT INTO ElectricPowerValues ( ' + columns + ') VALUES  ' + values + ' ;'
 
-        command = 'INSERT INTO ElectricPowerValues ( ' + columns + ') VALUES  ' + values + ' ;'
+            # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
+            from GenerateMeterData.Service.Work_With_Database import SQL
 
-        # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
-        from GenerateMeterData.Service.Work_With_Database import SQL
-
-        result = SQL(command=command)
+            result = SQL(command=command)

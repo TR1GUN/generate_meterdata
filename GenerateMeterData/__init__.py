@@ -25,6 +25,7 @@ def MeterTable(redefine_tag: dict = {}):
     RTUFeederNum - int - номер фидера RTU
     RTUObjNum - int - номер объекта RTU
 
+    :param Count_Meter:
     :param redefine_tag: Словарь тэгов для переопределения
     :return:
     """

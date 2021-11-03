@@ -15,12 +15,15 @@ def SQL(command: str):
     SSH = ConnectSSH()
 
     # и Делаем нашу команду
-
+    print('--->',command)
     result = SSH.Exec_command_return_result('sudo sqlite3 /var/opt/uspd/meterdb/meter.db \'' + command + '\' ')
     # Закрываем соеденение
     # if result == 'Error: unable to open database file' :
     #     result = SSH.Exec_command_return_result('sudo sqlite3 /var/opt/uspd/meterdb/meter.db \'' + command + '\' ')
     # print(result)
+
+
+
 
     SSH.close()
 

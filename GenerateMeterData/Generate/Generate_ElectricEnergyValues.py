@@ -53,8 +53,9 @@ class GeneratorElectricEnergyValues(GeneratorWithMeterData):
         self.DeviceIdx = self.Config.get('DeviceIdx')
 
         self.RecordTypeId = RecordTypeId
+
         self.Count_timestamp = Count_timestamp
-        # С Переопределяемымыми тэгами - сложнее - отделяем мух от котлет и meter data тэги от остальных
+        # С Переопределяемыми тэгами - сложнее - отделяем мух от котлет и meter data тэги от остальных
         self.Redefine_tag = self._find_redefine_tag(Redefine_tag)
 
         # Генерируем MeterData
@@ -101,11 +102,13 @@ class GeneratorElectricEnergyValues(GeneratorWithMeterData):
 
         for ids in MeterData:
             # генерируем сначала в формате JSON
-            ElectricPowerValues_format_JSON = self._generate_ElectricEnergyValues_one_record()
-            # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
-            # Теперь ставим айдишник записи
-            # ElectricPowerValues_format_JSON['id'] = deepcopy(self.MeterData[ids]['id'])
-            MeterData[ids].update(ElectricPowerValues_format_JSON)
+            # Если Valid > 0 Генерируем
+            if MeterData[ids].get('Valid') > 0:
+                ElectricPowerValues_format_JSON = self._generate_ElectricEnergyValues_one_record()
+                # ТЕПЕРЬ ПЕРЕЗАПИСЫВАЕМ ЗНАЧЕНИЯ
+                # Теперь ставим айдишник записи
+                # ElectricPowerValues_format_JSON['id'] = deepcopy(self.MeterData[ids]['id'])
+                MeterData[ids].update(ElectricPowerValues_format_JSON)
 
         return MeterData
 
@@ -157,98 +160,99 @@ class GeneratorElectricEnergyValues(GeneratorWithMeterData):
 
         for ids in ElectricEnergyValues_format_JSON:
             # Формируем 5 списков как раз по тарифам
+            # ВСЕ ЗАПИСЫВАЕМ ТОЛЬКО ЕСЛИ VALID > 0 :
+            if ElectricEnergyValues_format_JSON[ids].get('Valid') > 0 :
+                ElectricEnergyValues_tariff0 = {
+                    'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
+                    'Tariff': 0,
+                    'Ap': ElectricEnergyValues_format_JSON[ids].get('A+0'),
+                    'Rp': ElectricEnergyValues_format_JSON[ids].get('R+0'),
+                    'Am': ElectricEnergyValues_format_JSON[ids].get('A-0'),
+                    'Rm': ElectricEnergyValues_format_JSON[ids].get('R-0'),
+                }
+                ElectricEnergyValues_tariff1 = {
+                    'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
+                    'Tariff': 1,
+                    'Ap': ElectricEnergyValues_format_JSON[ids].get('A+1'),
+                    'Rp': ElectricEnergyValues_format_JSON[ids].get('R+1'),
+                    'Am': ElectricEnergyValues_format_JSON[ids].get('A-1'),
+                    'Rm': ElectricEnergyValues_format_JSON[ids].get('R-1'),
+                }
 
-            ElectricEnergyValues_tariff0 = {
-                'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
-                'Tariff': 0,
-                'Ap': ElectricEnergyValues_format_JSON[ids].get('A+0'),
-                'Rp': ElectricEnergyValues_format_JSON[ids].get('R+0'),
-                'Am': ElectricEnergyValues_format_JSON[ids].get('A-0'),
-                'Rm': ElectricEnergyValues_format_JSON[ids].get('R-0'),
-            }
-            ElectricEnergyValues_tariff1 = {
-                'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
-                'Tariff': 1,
-                'Ap': ElectricEnergyValues_format_JSON[ids].get('A+1'),
-                'Rp': ElectricEnergyValues_format_JSON[ids].get('R+1'),
-                'Am': ElectricEnergyValues_format_JSON[ids].get('A-1'),
-                'Rm': ElectricEnergyValues_format_JSON[ids].get('R-1'),
-            }
+                ElectricEnergyValues_tariff2 = {
+                    'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
+                    'Tariff': 2,
+                    'Ap': ElectricEnergyValues_format_JSON[ids].get('A+2'),
+                    'Rp': ElectricEnergyValues_format_JSON[ids].get('R+2'),
+                    'Am': ElectricEnergyValues_format_JSON[ids].get('A-2'),
+                    'Rm': ElectricEnergyValues_format_JSON[ids].get('R-2'),
+                }
 
-            ElectricEnergyValues_tariff2 = {
-                'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
-                'Tariff': 2,
-                'Ap': ElectricEnergyValues_format_JSON[ids].get('A+2'),
-                'Rp': ElectricEnergyValues_format_JSON[ids].get('R+2'),
-                'Am': ElectricEnergyValues_format_JSON[ids].get('A-2'),
-                'Rm': ElectricEnergyValues_format_JSON[ids].get('R-2'),
-            }
+                ElectricEnergyValues_tariff3 = {
+                    'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
+                    'Tariff': 3,
+                    'Ap': ElectricEnergyValues_format_JSON[ids].get('A+3'),
+                    'Rp': ElectricEnergyValues_format_JSON[ids].get('R+3'),
+                    'Am': ElectricEnergyValues_format_JSON[ids].get('A-3'),
+                    'Rm': ElectricEnergyValues_format_JSON[ids].get('R-3'),
+                }
 
-            ElectricEnergyValues_tariff3 = {
-                'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
-                'Tariff': 3,
-                'Ap': ElectricEnergyValues_format_JSON[ids].get('A+3'),
-                'Rp': ElectricEnergyValues_format_JSON[ids].get('R+3'),
-                'Am': ElectricEnergyValues_format_JSON[ids].get('A-3'),
-                'Rm': ElectricEnergyValues_format_JSON[ids].get('R-3'),
-            }
+                ElectricEnergyValues_tariff4 = {
+                    'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
+                    'Tariff': 4,
+                    'Ap': ElectricEnergyValues_format_JSON[ids].get('A+4'),
+                    'Rp': ElectricEnergyValues_format_JSON[ids].get('R+4'),
+                    'Am': ElectricEnergyValues_format_JSON[ids].get('A-4'),
+                    'Rm': ElectricEnergyValues_format_JSON[ids].get('R-4'),
+                }
 
-            ElectricEnergyValues_tariff4 = {
-                'Id': ElectricEnergyValues_format_JSON[ids].get('Id'),
-                'Tariff': 4,
-                'Ap': ElectricEnergyValues_format_JSON[ids].get('A+4'),
-                'Rp': ElectricEnergyValues_format_JSON[ids].get('R+4'),
-                'Am': ElectricEnergyValues_format_JSON[ids].get('A-4'),
-                'Rm': ElectricEnergyValues_format_JSON[ids].get('R-4'),
-            }
+                # А теперь берем добавляем это все в наш список
+                ElectricEnergyValues_list.append(ElectricEnergyValues_tariff0)
+                ElectricEnergyValues_list.append(ElectricEnergyValues_tariff1)
+                ElectricEnergyValues_list.append(ElectricEnergyValues_tariff2)
+                ElectricEnergyValues_list.append(ElectricEnergyValues_tariff3)
+                ElectricEnergyValues_list.append(ElectricEnergyValues_tariff4)
 
-            # А теперь берем добавляем это все в наш список
-            ElectricEnergyValues_list.append(ElectricEnergyValues_tariff0)
-            ElectricEnergyValues_list.append(ElectricEnergyValues_tariff1)
-            ElectricEnergyValues_list.append(ElectricEnergyValues_tariff2)
-            ElectricEnergyValues_list.append(ElectricEnergyValues_tariff3)
-            ElectricEnergyValues_list.append(ElectricEnergyValues_tariff4)
+        # начинаем формировать команду ТОЛЬКО В ТМО СЛУЧАЕ ЕСЛИ У НАС ЕСТЬ ХОТЬ ЧТОТО
+        if len(ElectricEnergyValues_list) > 0:
+            columns_list = [
+                'Id',
+                'Tariff',
+                'Ap',
+                'Rp',
+                'Am',
+                'Rm',
+            ]
 
-        # начинаем формировать команду
+            columns = ''
+            values = ''
 
-        columns_list = [
-            'Id',
-            'Tariff',
-            'Ap',
-            'Rp',
-            'Am',
-            'Rm',
-        ]
+            # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
 
-        columns = ''
-        values = ''
+            for i in range(len(columns_list)):
+                columns = columns + columns_list[i] + ' , '
 
-        # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
+            # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
+            for i in range(len(ElectricEnergyValues_list)):
+                values_element = ''
+                for x in range(len(columns_list)):
+                    # если это стринг - то экранируем его
+                    if type(ElectricEnergyValues_list[i].get(columns_list[x])) == str:
+                        ElectricEnergyValues_list[i][columns_list[x]] = '\"' + ElectricEnergyValues_list[i].get(
+                            columns_list[x]) + '\"'
 
-        for i in range(len(columns_list)):
-            columns = columns + columns_list[i] + ' , '
+                    values_element = values_element + str(ElectricEnergyValues_list[i].get(columns_list[x])) + ' , '
+                # Обрезаем последнюю запятую
+                values_element = values_element[:-2]
+                values = values + ' ( ' + values_element + ' ) , '
 
-        # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
-        for i in range(len(ElectricEnergyValues_list)):
-            values_element = ''
-            for x in range(len(columns_list)):
-                # если это стринг - то экранируем его
-                if type(ElectricEnergyValues_list[i].get(columns_list[x])) == str:
-                    ElectricEnergyValues_list[i][columns_list[x]] = '\"' + ElectricEnergyValues_list[i].get(
-                        columns_list[x]) + '\"'
-
-                values_element = values_element + str(ElectricEnergyValues_list[i].get(columns_list[x])) + ' , '
             # Обрезаем последнюю запятую
-            values_element = values_element[:-2]
-            values = values + ' ( ' + values_element + ' ) , '
+            columns = columns[:-2]
+            values = values[:-2]
 
-        # Обрезаем последнюю запятую
-        columns = columns[:-2]
-        values = values[:-2]
+            command = 'INSERT INTO ElectricEnergyValues ( ' + columns + ') VALUES  ' + values + ' ;'
 
-        command = 'INSERT INTO ElectricEnergyValues ( ' + columns + ') VALUES  ' + values + ' ;'
+            # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
+            from GenerateMeterData.Service.Work_With_Database import SQL
 
-        # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
-        from GenerateMeterData.Service.Work_With_Database import SQL
-
-        result = SQL(command=command)
+            result = SQL(command=command)

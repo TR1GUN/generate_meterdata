@@ -66,12 +66,12 @@ class GeneratorJournalValues(GeneratorWithMeterData):
 
         eventId = 0
         for ids in MeterData:
+            if MeterData[ids].get('Valid') > 0:
+                # генерируем сначала в формате JSON
+                JournalValues_format_JSON = self._generate_JournalValues_one_record(eventId)
 
-            # генерируем сначала в формате JSON
-            JournalValues_format_JSON = self._generate_JournalValues_one_record(eventId)
-
-            MeterData[ids].update(JournalValues_format_JSON)
-            eventId = eventId + 1
+                MeterData[ids].update(JournalValues_format_JSON)
+                eventId = eventId + 1
         return MeterData
 
     def _generate_MeterData(self):
@@ -134,53 +134,53 @@ class GeneratorJournalValues(GeneratorWithMeterData):
         JournalValues_list = []
 
         for ids in JournalValues_format_JSON:
+            if JournalValues_format_JSON[ids].get('Valid') > 0:
+                JournalValues = \
+                {
+                    'Id': JournalValues_format_JSON[ids].get('Id'),
+                    'Event': JournalValues_format_JSON[ids].get('Event'),
+                    'EventId': JournalValues_format_JSON[ids].get('EventId')
+                }
 
-            JournalValues = \
-            {
-                'Id': JournalValues_format_JSON[ids].get('Id'),
-                'Event': JournalValues_format_JSON[ids].get('Event'),
-                'EventId': JournalValues_format_JSON[ids].get('EventId')
-            }
-
-            # А теперь берем добавляем это все в наш список
-            JournalValues_list.append(JournalValues)
+                # А теперь берем добавляем это все в наш список
+                JournalValues_list.append(JournalValues)
 
         # начинаем формировать команду
+        if len(JournalValues_list) > 0:
+            columns_list = [
+                'Id',
+                'Event',
+                'EventId'
+                            ]
 
-        columns_list = [
-            'Id',
-            'Event',
-            'EventId'
-                        ]
+            columns = ''
+            values = ''
 
-        columns = ''
-        values = ''
+            # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
 
-        # ТЕПЕРЬ ПЕРЕБИРАЕМ ВСЕ КОЛОНКИ
+            for i in range(len(columns_list)):
+                columns = columns + columns_list[i] + ' , '
 
-        for i in range(len(columns_list)):
-            columns = columns + columns_list[i] + ' , '
+            # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
+            for i in range(len(JournalValues_list)):
+                values_element = ''
+                for x in range(len(columns_list)):
+                    # если это стринг - то экранируем его
+                    if type(JournalValues_list[i].get(columns_list[x])) == str:
+                        JournalValues_list[i][columns_list[x]] = '\"' + JournalValues_list[i].get(
+                            columns_list[x]) + '\"'
 
-        # ТЕПЕРЬ ФОРМИРУЕМ ВСЕ ЗНАЧЕНИЯ
-        for i in range(len(JournalValues_list)):
-            values_element = ''
-            for x in range(len(columns_list)):
-                # если это стринг - то экранируем его
-                if type(JournalValues_list[i].get(columns_list[x])) == str:
-                    JournalValues_list[i][columns_list[x]] = '\"' + JournalValues_list[i].get(
-                        columns_list[x]) + '\"'
+                    values_element = values_element + str(JournalValues_list[i].get(columns_list[x])) + ' , '
+                # Обрезаем последнюю запятую
+                values_element = values_element[:-2]
+                values = values + ' ( ' + values_element + ' ) , '
 
-                values_element = values_element + str(JournalValues_list[i].get(columns_list[x])) + ' , '
             # Обрезаем последнюю запятую
-            values_element = values_element[:-2]
-            values = values + ' ( ' + values_element + ' ) , '
+            columns = columns[:-2]
+            values = values[:-2]
 
-        # Обрезаем последнюю запятую
-        columns = columns[:-2]
-        values = values[:-2]
+            command = 'INSERT INTO JournalValues ( ' + columns + ') VALUES  ' + values + ' ;'
+            # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
+            from GenerateMeterData.Service.Work_With_Database import SQL
 
-        command = 'INSERT INTO JournalValues ( ' + columns + ') VALUES  ' + values + ' ;'
-        # ТЕПЕРЬ ОТПРАВЛЯЕМ КОМАНДУ НА ЗАПИСЬ
-        from GenerateMeterData.Service.Work_With_Database import SQL
-
-        result = SQL(command=command)
+            result = SQL(command=command)

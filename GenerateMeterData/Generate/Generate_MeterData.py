@@ -24,7 +24,8 @@ class GeneratorMeterData:
                  RecordTypeId_Name: str,
                  MeterData_tag: dict = {},
                  Count_timestamp: int = 1,
-                 cTime: int = 30):
+                 cTime: int = 30
+                 ):
 
         self.MeterData = {}
         self.Timestamp = []
@@ -41,7 +42,7 @@ class GeneratorMeterData:
 
             self.Timestamp = GenerateTimestamp(measure=RecordTypeId_Name, Count_timestamp=Count_timestamp,
                                                cTime=self.cTime).Timestamp_list
-        # ЕСли у нас список таймштампов - то просто переопределяем
+        # Если у нас список таймштампов - то просто переопределяем
         elif type(Count_timestamp) == list:
             self.Timestamp = Count_timestamp
 
@@ -67,9 +68,7 @@ class GeneratorMeterData:
 
         Command = 'SELECT Id FROM ArchTypes WHERE Name in ' + '( \"' + self.RecordTypeId_Name + '\" ) ;'
 
-        print('-->', Command)
         result = SQL(Command)
-        print('-->',result)
         return int(result)
 
     # Функция Перезаписи конфига
@@ -270,7 +269,6 @@ class GeneratorMeterData:
             MeterData_element = self._Generate_MeterData_dict(Timestamp=Timestamp[i])
             # Теперь это записываем
             MeterData[i] = MeterData_element
-
 
         # ТЕПЕРЬ ВСЕ ЭТО ОТПРАВЛЯЕМ НА ЗАПИСЬ
         MeterData_to_record_list = self._Record_value_to_Table(MeterData=MeterData)
