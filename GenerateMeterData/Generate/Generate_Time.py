@@ -225,8 +225,8 @@ class GenerateTimestamp:
         if remove_day:
             # НАЧИНАЕМ СО ВЧЕРА
             remove_day = timedelta(days=1)
-            # date = date + remove_day
-            date = date
+            date = date - remove_day
+            # date = date
         # После чего начинаем ее изменять
         for i in range(range_ts):
             # Изначально добавляем нашу дату, переведя ее в unixtime
@@ -236,7 +236,7 @@ class GenerateTimestamp:
 
             time_delta = timedelta(days=day, hours=hour, minutes=minute, seconds=0, microseconds=0)
             # Добавляем нашу дельту времени
-            date = date + time_delta
+            date = date - time_delta
 
         # После чего возвращаем наш массив
 
