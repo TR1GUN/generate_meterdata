@@ -212,3 +212,5 @@ class GeneratorJournalValues(GeneratorWithMeterData):
             if len(JournalValues_format_JSON) > 150:
                 self._record_value_queue(JournalValues_format_JSON=JournalValues_format_JSON)
                 JournalValues_format_JSON = {}
+        if len(JournalValues_format_JSON) > 0:
+            self._record_value_queue(JournalValues_format_JSON=JournalValues_format_JSON)

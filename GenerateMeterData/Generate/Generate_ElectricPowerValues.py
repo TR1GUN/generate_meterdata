@@ -229,4 +229,5 @@ class GeneratorElectricPowerValues(GeneratorWithMeterData):
                 self._record_value_queue(ElectricPowerValues_format_JSON=ElectricPowerValues_format_JSON)
                 ElectricPowerValues_format_JSON = {}
 
-
+        if len(ElectricPowerValues_format_JSON) > 0:
+            self._record_value_queue(ElectricPowerValues_format_JSON=ElectricPowerValues_format_JSON)

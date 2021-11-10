@@ -274,7 +274,8 @@ class GeneratorElectricQualityValues(GeneratorWithMeterData):
             if len(ElectricQualityValues_format_JSON) > 150:
                 self._record_value_queue(ElectricQualityValues_format_JSON=ElectricQualityValues_format_JSON)
                 ElectricQualityValues_format_JSON = {}
-
+        if len(ElectricQualityValues_format_JSON) > 0:
+            self._record_value_queue(ElectricQualityValues_format_JSON=ElectricQualityValues_format_JSON)
 
 
 
