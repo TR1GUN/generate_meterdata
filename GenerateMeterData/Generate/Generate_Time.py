@@ -151,7 +151,7 @@ class GenerateTimestamp:
         # Иначе - Мы обрабаотываем мгновенные показатели
         else:
             self.Time = self.Time.replace(second=0, microsecond=0)
-            timestamp_list = self.__generate_correct_timestamp_through_timedelta(range_ts=self.Count_timestamp, day=1)
+            timestamp_list = self.__generate_correct_timestamp_through_timedelta(range_ts=self.Count_timestamp, day=0, minute=5)
 
         return timestamp_list
 
@@ -225,7 +225,8 @@ class GenerateTimestamp:
         if remove_day:
             # НАЧИНАЕМ СО ВЧЕРА
             remove_day = timedelta(days=1)
-            date = date - remove_day
+            # date = date + remove_day
+            date = date
         # После чего начинаем ее изменять
         for i in range(range_ts):
             # Изначально добавляем нашу дату, переведя ее в unixtime
@@ -235,7 +236,7 @@ class GenerateTimestamp:
 
             time_delta = timedelta(days=day, hours=hour, minutes=minute, seconds=0, microseconds=0)
             # Добавляем нашу дельту времени
-            date = date - time_delta
+            date = date + time_delta
 
         # После чего возвращаем наш массив
 
