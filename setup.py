@@ -10,7 +10,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
 
     install_requires=[
-        'paramiko',
-        # "git+https://osr-dev-git.allmonitoring.local/AutoTestHelpers/um40smart_autotests/um40-smart-ssh-database-framework.git@master"
+        # 'paramiko',
+        "git+https://osr-dev-git.allmonitoring.local/AutoTestHelpers/um40smart_autotests/um40-smart-ssh-database"
+        "-framework.git@master",
                     ]
 )
