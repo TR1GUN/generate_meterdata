@@ -8,24 +8,15 @@ def SQL(command: str):
 
     И возвращает результат
     """
-    # ДЕЛАЕМ КОНЕКТ ПО SSH
-    # для начала импортируем наш модуль конекта
-    from GenerateMeterData.Service.Connect_to_SSH import ConnectSSH
 
-    SSH = ConnectSSH()
-
-    # и Делаем нашу команду
-    print('--->',command)
-    result = SSH.Exec_command_return_result('sudo sqlite3 /var/opt/uspd/meterdb/meter.db \'' + command + '\' ')
-    # Закрываем соеденение
-    # if result == 'Error: unable to open database file' :
-    #     result = SSH.Exec_command_return_result('sudo sqlite3 /var/opt/uspd/meterdb/meter.db \'' + command + '\' ')
-    print(result)
-
-
-
-
-    SSH.close()
+    from SSH_DataBase_Framework import Setup, Set_Config
+    from GenerateMeterData.Service.Config import path_to_data_base, IP_port, IP_address, user_password, user_login
+    # Берем путь
+    path = path_to_data_base
+    # Задаем конфиги
+    Set_Config(IP_address=IP_address, IP_port=IP_port, user_login=user_login, user_password=user_password)
+    # Отправляем JSON в нужную нам API
+    result = Setup(command=command, data_base_path=path)
 
     return result
 
@@ -62,6 +53,3 @@ def find_to_max_MeterId_in_MeterTable():
                 'DeviceIdx': 0
             }
     return result
-
-
-

@@ -1,9 +1,25 @@
-IP_address = None
-IP_port = None
-user_login = None
-user_password = None
-# Парсим наши настройки
-from GenerateMeterData.Service import Config_Parser
+def Set_Config(IP_address=None,
+               IP_port=None,
+               user_login=None,
+               user_password=None
+               ):
+    """
+    Здесь задаем свои конфиги , если INI файл отсутствует или необходимо переопределить значения
+    :param IP_address: IP адрес
+    :param IP_port: IP порт
+    :param user_login: Имя Пользователя
+    :param user_password: Пароль Пользователя
+    :return:
+    """
+    from GenerateMeterData.Service import Config
+    # Config.Config_USPD['IP_address'] = IP_address
+    # Config.Config_USPD['IP_port'] = IP_port
+    # Config.Config_USPD['user_login'] = user_login
+    # Config.Config_USPD['user_password'] = user_password
+    Config.IP_address = IP_address
+    Config.IP_port = IP_port
+    Config.user_login = user_login
+    Config.user_password = user_password
 
 
 def MeterTable(redefine_tag: dict = {}):
